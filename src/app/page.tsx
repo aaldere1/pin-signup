@@ -13,13 +13,13 @@ export default function Home() {
   const [ref, setRef] = useState<string>("");
   const [submitError, setSubmitError] = useState<string>("");
 
-  const handleSubmit = async (vals: FormValues, optedIn: boolean) => {
+  const handleSubmit = async (vals: FormValues, optedIn: boolean, turnstileToken: string) => {
     setSubmitError("");
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...vals, optedIn }),
+        body: JSON.stringify({ ...vals, optedIn, turnstileToken }),
       });
       const json = await res.json();
       if (!res.ok) {

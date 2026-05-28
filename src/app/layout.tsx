@@ -22,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/mtl1idj.css" />
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
       </head>
       <body>{children}</body>
     </html>

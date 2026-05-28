@@ -1,10 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (el: string | HTMLElement, opts: Record<string, unknown>) => string;
+      reset: (id: string) => void;
+    };
+  }
+}
 
 interface SignupFormProps {
   onClose: () => void;
-  onSubmit: (values: FormValues, optedIn: boolean) => Promise<void>;
+  onSubmit: (values: FormValues, optedIn: boolean, turnstileToken: string) => Promise<void>;
   error?: string;
 }
 
@@ -25,11 +34,39 @@ export default function SignupForm({ onClose, onSubmit, error }: SignupFormProps
   const [optedIn, setOptedIn] = useState(true);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     firstFieldRef.current?.focus();
   }, []);
+
+  const renderTurnstile = useCallback(() => {
+    if (!turnstileRef.current || !window.turnstile || turnstileIdRef.current) return;
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    if (!siteKey) return;
+    turnstileIdRef.current = window.turnstile.render(turnstileRef.current, {
+      sitekey: siteKey,
+      size: "invisible",
+      callback: (token: string) => setTurnstileToken(token),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (window.turnstile) {
+      renderTurnstile();
+    } else {
+      const check = setInterval(() => {
+        if (window.turnstile) {
+          clearInterval(check);
+          renderTurnstile();
+        }
+      }, 200);
+      return () => clearInterval(check);
+    }
+  }, [renderTurnstile]);
 
   const set = (k: keyof FormValues, v: string) =>
     setValues((s) => ({ ...s, [k]: v }));
@@ -47,7 +84,7 @@ export default function SignupForm({ onClose, onSubmit, error }: SignupFormProps
     if (!validate() || submitting) return;
     setSubmitting(true);
     try {
-      await onSubmit(values, optedIn);
+      await onSubmit(values, optedIn, turnstileToken);
     } finally {
       setSubmitting(false);
     }
@@ -159,6 +196,8 @@ export default function SignupForm({ onClose, onSubmit, error }: SignupFormProps
           {error}
         </p>
       )}
+
+      <div ref={turnstileRef} />
 
       <div className="form-actions reveal" style={D(4)}>
         <button type="submit" className="btn solid" disabled={submitting}>

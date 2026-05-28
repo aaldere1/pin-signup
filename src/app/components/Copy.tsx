@@ -26,7 +26,7 @@ const pad = (n: number, w = 2) => String(n).padStart(w, "0");
 interface CopyProps {
   onJoin: () => void;
   mode: "idle" | "form" | "done";
-  onSubmit: (vals: FormValues, optedIn: boolean) => Promise<void>;
+  onSubmit: (vals: FormValues, optedIn: boolean, turnstileToken: string) => Promise<void>;
   data: FormValues | null;
   refCode: string;
   submitError: string;

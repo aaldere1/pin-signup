@@ -23,7 +23,22 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
     );
   }
 
-  const row = await verifyToken(token);
+  const { row, expired } = await verifyToken(token);
+
+  if (expired) {
+    return (
+      <div id="root-shell">
+        <div className="verify-container">
+          <div className="verify-card error">
+            <span className="verify-icon">✕</span>
+            <h1>Link expired</h1>
+            <p>This verification link has expired (24-hour window). Please sign up again to get a fresh link.</p>
+            <a href="/" className="verify-btn">Back to signup →</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!row) {
     return (
@@ -32,7 +47,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
           <div className="verify-card error">
             <span className="verify-icon">✕</span>
             <h1>Link not found</h1>
-            <p>This verification link is invalid or has expired. Please sign up again.</p>
+            <p>This verification link is invalid. Please use the link from your email, or sign up again.</p>
             <a href="/" className="verify-btn">Back to signup →</a>
           </div>
         </div>

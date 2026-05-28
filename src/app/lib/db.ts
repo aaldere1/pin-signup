@@ -65,18 +65,27 @@ export async function upsertSignup(data: {
   return { ref, token, isNew: true };
 }
 
-export async function verifyToken(token: string): Promise<SignupRow | null> {
+const TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+export async function verifyToken(
+  token: string
+): Promise<{ row: SignupRow | null; expired?: boolean }> {
   const sql = getSQL();
   const result = await sql`
     SELECT * FROM signups WHERE token = ${token}
   `;
-  if (result.length === 0) return null;
+  if (result.length === 0) return { row: null };
 
   const row = result[0] as SignupRow;
-  if (row.verified) return row;
+  if (row.verified) return { row };
+
+  const created = new Date(row.created_at).getTime();
+  if (Date.now() - created > TOKEN_TTL_MS) {
+    return { row: null, expired: true };
+  }
 
   await sql`
     UPDATE signups SET verified = true, verified_at = NOW() WHERE id = ${row.id}
   `;
-  return { ...row, verified: true, verified_at: new Date().toISOString() };
+  return { row: { ...row, verified: true, verified_at: new Date().toISOString() } };
 }
