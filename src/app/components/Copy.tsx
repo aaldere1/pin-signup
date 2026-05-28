@@ -26,12 +26,14 @@ const pad = (n: number, w = 2) => String(n).padStart(w, "0");
 interface CopyProps {
   onJoin: () => void;
   mode: "idle" | "form" | "done";
-  onSubmit: (vals: FormValues) => void;
+  onSubmit: (vals: FormValues, optedIn: boolean) => Promise<void>;
   data: FormValues | null;
+  refCode: string;
+  submitError: string;
   reset: () => void;
 }
 
-export default function Copy({ onJoin, mode, onSubmit, data, reset }: CopyProps) {
+export default function Copy({ onJoin, mode, onSubmit, data, refCode, submitError, reset }: CopyProps) {
   const { d, h, m, s, isLive } = useCountdown(RELEASE_TARGET);
 
   return (
@@ -100,10 +102,10 @@ export default function Copy({ onJoin, mode, onSubmit, data, reset }: CopyProps)
           </button>
         )}
         {mode === "form" && (
-          <SignupForm onClose={reset} onSubmit={onSubmit} />
+          <SignupForm onClose={reset} onSubmit={onSubmit} error={submitError} />
         )}
         {mode === "done" && data && (
-          <Success values={data} onReset={reset} />
+          <Success values={data} refCode={refCode} onReset={reset} />
         )}
       </div>
 

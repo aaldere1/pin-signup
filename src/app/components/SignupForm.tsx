@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react";
 
 interface SignupFormProps {
   onClose: () => void;
-  onSubmit: (values: FormValues) => void;
+  onSubmit: (values: FormValues, optedIn: boolean) => Promise<void>;
+  error?: string;
 }
 
 export interface FormValues {
@@ -14,14 +15,16 @@ export interface FormValues {
   tour: string;
 }
 
-export default function SignupForm({ onClose, onSubmit }: SignupFormProps) {
+export default function SignupForm({ onClose, onSubmit, error }: SignupFormProps) {
   const [values, setValues] = useState<FormValues>({
     name: "",
     email: "",
     city: "",
     tour: "any",
   });
+  const [optedIn, setOptedIn] = useState(true);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [submitting, setSubmitting] = useState(false);
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -39,10 +42,15 @@ export default function SignupForm({ onClose, onSubmit }: SignupFormProps) {
     return Object.keys(e).length === 0;
   };
 
-  const submit = (ev: React.FormEvent) => {
+  const submit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (!validate()) return;
-    onSubmit(values);
+    if (!validate() || submitting) return;
+    setSubmitting(true);
+    try {
+      await onSubmit(values, optedIn);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const D = (i: number) => ({ animationDelay: `${i * 55}ms` });
@@ -127,7 +135,11 @@ export default function SignupForm({ onClose, onSubmit }: SignupFormProps) {
       </div>
 
       <label className="checkbox-row reveal" style={D(3)}>
-        <input type="checkbox" defaultChecked />
+        <input
+          type="checkbox"
+          checked={optedIn}
+          onChange={(e) => setOptedIn(e.target.checked)}
+        />
         <span>
           I&apos;d like the occasional letter about new pins, tour dates, and
           partner programmes. Unsubscribe anytime —{" "}
@@ -142,9 +154,15 @@ export default function SignupForm({ onClose, onSubmit }: SignupFormProps) {
         </span>
       </label>
 
+      {error && (
+        <p className="reveal" style={{ color: "var(--color-tint-restrict)", fontSize: "0.85rem", margin: 0 }}>
+          {error}
+        </p>
+      )}
+
       <div className="form-actions reveal" style={D(4)}>
-        <button type="submit" className="btn solid">
-          Send the owl
+        <button type="submit" className="btn solid" disabled={submitting}>
+          {submitting ? "Sending owl…" : "Send the owl"}
           <span className="arrow">→</span>
         </button>
         <span className="hint">Free · No payment yet</span>

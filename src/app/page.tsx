@@ -10,14 +10,39 @@ import type { FormValues } from "./components/SignupForm";
 export default function Home() {
   const [mode, setMode] = useState<"idle" | "form" | "done">("idle");
   const [data, setData] = useState<FormValues | null>(null);
+  const [ref, setRef] = useState<string>("");
+  const [submitError, setSubmitError] = useState<string>("");
 
-  const handleSubmit = (vals: FormValues) => {
-    setData(vals);
-    setMode("done");
+  const handleSubmit = async (vals: FormValues, optedIn: boolean) => {
+    setSubmitError("");
+    try {
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...vals, optedIn }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setSubmitError(json.error ?? "Something went wrong");
+        if (json.alreadyVerified) {
+          setData(vals);
+          setRef("");
+          setMode("done");
+        }
+        return;
+      }
+      setData(vals);
+      setRef(json.ref);
+      setMode("done");
+    } catch {
+      setSubmitError("Network error — please try again.");
+    }
   };
   const reset = () => {
     setMode("idle");
     setData(null);
+    setRef("");
+    setSubmitError("");
   };
   const onJoin = () => setMode("form");
 
@@ -51,6 +76,8 @@ export default function Home() {
             mode={mode}
             onSubmit={handleSubmit}
             data={data}
+            refCode={ref}
+            submitError={submitError}
             reset={reset}
           />
           <Pin />
