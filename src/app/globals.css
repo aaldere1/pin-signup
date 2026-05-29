@@ -390,6 +390,40 @@ footer.fine span { color: var(--color-text-muted); }
   .spec .value.countdown em { margin-right: 0.22em; }
 }
 
+/* Shipping line — spans full width under the spec grid */
+.spec-ship {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  margin-top: 0.5rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--color-border-soft);
+}
+.spec-ship .ship-dot {
+  flex: none;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  box-shadow: 0 0 10px var(--color-gold);
+}
+.spec-ship .ship-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-text-muted);
+}
+.spec-ship .ship-value {
+  font-size: 0.8125rem;
+  color: var(--color-text-dim);
+}
+.spec-ship .ship-em { color: var(--color-text); }
+@media (max-width: 920px) {
+  .spec-ship { justify-content: center; }
+}
+
 /* Includes line */
 .includes {
   display: flex;

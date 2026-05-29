@@ -96,7 +96,7 @@ export function buildVerificationEmail(params: {
   <tr><td style="border-top:1px dashed #262B38;"></td></tr>
   </table>
 
-  <!-- Ref code -->
+  <!-- Reservation details -->
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td style="font-size:11px;color:#6C7283;font-family:'Courier New',monospace;letter-spacing:0.06em;">
@@ -104,6 +104,14 @@ export function buildVerificationEmail(params: {
     </td>
     <td style="text-align:right;font-size:13px;color:#D4D8E3;font-family:'Courier New',monospace;letter-spacing:0.04em;font-weight:600;">
       ${escapeHtml(ref)}
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:12px;font-size:11px;color:#6C7283;font-family:'Courier New',monospace;letter-spacing:0.06em;">
+      Shipping
+    </td>
+    <td style="padding-top:12px;text-align:right;font-size:12px;color:#D4D8E3;font-family:'Courier New',monospace;letter-spacing:0.02em;">
+      Worldwide &middot; duties &amp; VAT included
     </td>
   </tr>
   </table>

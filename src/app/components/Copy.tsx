@@ -92,6 +92,15 @@ export default function Copy({ onJoin, mode, onSubmit, data, refCode, submitErro
           )}
           <span className="sub">Sept 1, 2026 · 00:00 local</span>
         </div>
+
+        <div className="spec-ship">
+          <span className="ship-dot" aria-hidden="true" />
+          <span className="ship-label">Shipping</span>
+          <span className="ship-value">
+            Worldwide —{" "}
+            <span className="ship-em">duties &amp; VAT included</span>
+          </span>
+        </div>
       </div>
 
       <div id="cta-zone" className="cta-zone reveal" style={{ animationDelay: "220ms" }}>
