@@ -63,7 +63,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
             <span className="dot" />
             Verified
           </span>
-          <h1>Your owl has landed.</h1>
+          <h1>Your spot is saved.</h1>
           <p>
             You&apos;re confirmed on the list, {row.name.split(" ")[0]}. We&apos;ll write
             24 hours before the public sale with a private purchase link.

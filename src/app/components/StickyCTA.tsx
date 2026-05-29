@@ -76,7 +76,7 @@ export default function StickyCTA({ mode, onJoin }: StickyCTAProps) {
     >
       <div className="sticky-meta">
         <span className="top">
-          {isLive ? "On sale now" : "Owls dispatch in"}
+          {isLive ? "On sale now" : "Sale opens in"}
         </span>
         <span className="bottom">{countdownLine}</span>
       </div>

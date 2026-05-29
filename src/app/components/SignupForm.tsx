@@ -98,7 +98,7 @@ export default function SignupForm({ onClose, onSubmit, error }: SignupFormProps
         <div>
           <h3>Reserve your seat at the door.</h3>
           <p>
-            We&apos;ll write the moment the owls take flight — sale opens to
+            We&apos;ll notify you the moment the doors open — sale opens to
             this list first, 24 hours before public release.
           </p>
         </div>
@@ -131,7 +131,7 @@ export default function SignupForm({ onClose, onSubmit, error }: SignupFormProps
             id="f-email"
             type="email"
             autoComplete="email"
-            placeholder="owl@hogwarts.edu"
+            placeholder="you@example.com"
             value={values.email}
             onChange={(e) => set("email", e.target.value)}
           />
@@ -201,7 +201,7 @@ export default function SignupForm({ onClose, onSubmit, error }: SignupFormProps
 
       <div className="form-actions reveal" style={D(4)}>
         <button type="submit" className="btn solid" disabled={submitting}>
-          {submitting ? "Sending owl…" : "Send the owl"}
+          {submitting ? "Reserving…" : "Reserve my spot"}
           <span className="arrow">→</span>
         </button>
         <span className="hint">Free · No payment yet</span>

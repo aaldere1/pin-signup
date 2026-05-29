@@ -30,7 +30,7 @@ export default function Success({ values, refCode, onReset }: SuccessProps) {
           </>
         ) : (
           <>
-            We&apos;ve sent a verification owl to <strong style={{ color: "var(--color-text)" }}>{values.email}</strong>.
+            We&apos;ve sent a verification email to <strong style={{ color: "var(--color-text)" }}>{values.email}</strong>.
             Click the link in the email to confirm your spot. Once verified,
             we&apos;ll write 24 hours before the public sale with a private link.
             The first 500 pins are individually numbered — in line order, list
