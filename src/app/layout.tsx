@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "The Boy Who Lived — Collector's Pin · Join the list",
+  title: "Collector's Pin · Join the List",
   description:
     "A 925 silver collector's pin from the Harry Potter Film Concert Series — limited edition of 500. Sign up for first access.",
   openGraph: {
